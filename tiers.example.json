@@ -1,0 +1,1 @@
+[{"expect":["free plan","free forever"],"forbid":["credit card required"],"name":"Example Tool","url":"https://example.com/pricing"},{"expect":["free"],"forbid":[],"name":"GitHub","url":"https://github.com/pricing"}]

@@ -1,0 +1,38 @@
+name: "tier-drift"
+description: "Verify pricing-page claims haven't drifted (free tiers quietly killed, claims removed)"
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  config:
+    description: "Path to the tiers JSON config file"
+    required: false
+    default: "tiers.json"
+  fail-on-drift:
+    description: "Fail the run when claim drift is detected"
+    required: false
+    default: "true"
+  fail-on-error:
+    description: "Fail the run when a page can't be fetched"
+    required: false
+    default: "true"
+  delay:
+    description: "Seconds to wait between page requests"
+    required: false
+    default: "1"
+  timeout:
+    description: "Request timeout in seconds"
+    required: false
+    default: "20"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run tier-drift
+      shell: bash
+      run: |
+        ARGS=(--config "${{ inputs.config }}" --delay "${{ inputs.delay }}" --timeout "${{ inputs.timeout }}")
+        if [ "${{ inputs.fail-on-drift }}" != "true" ]; then ARGS+=(--no-fail-on-drift); fi
+        if [ "${{ inputs.fail-on-error }}" != "true" ]; then ARGS+=(--no-fail-on-error); fi
+        python3 "${{ github.action_path }}/check.py" "${ARGS[@]}"
